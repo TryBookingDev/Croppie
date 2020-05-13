@@ -690,23 +690,23 @@
                 oBoundaries = boundaries.origin;
 
             if (transform.x >= transBoundaries.maxX) {
-                origin.x = oBoundaries.minX;
-                transform.x = transBoundaries.maxX;
+                origin.x = oBoundaries.minX / 2;
+                transform.x = transBoundaries.maxX / 2;
             }
 
             if (transform.x <= transBoundaries.minX) {
-                origin.x = oBoundaries.maxX;
-                transform.x = transBoundaries.minX;
+                origin.x = oBoundaries.maxX / 2;
+                transform.x = transBoundaries.minX / 2;
             }
 
             if (transform.y >= transBoundaries.maxY) {
-                origin.y = oBoundaries.minY;
-                transform.y = transBoundaries.maxY;
+                origin.y = oBoundaries.minY / 2;
+                transform.y = transBoundaries.maxY / 2;
             }
 
             if (transform.y <= transBoundaries.minY) {
-                origin.y = oBoundaries.maxY;
-                transform.y = transBoundaries.minY;
+                origin.y = oBoundaries.maxY / 2;
+                transform.y = transBoundaries.minY / 2;
             }
         }
         applyCss();
@@ -810,11 +810,13 @@
                 left = transform.x + deltaX;
 
             if (self.options.enforceBoundary) {
-                if (vpRect.top > imgRect.top + deltaY && vpRect.bottom < imgRect.bottom + deltaY) {
+                if ((vpRect.top > imgRect.top + deltaY && vpRect.bottom < imgRect.bottom + deltaY)
+                    || (vpRect.top < imgRect.top + deltaY && vpRect.bottom > imgRect.bottom + deltaY)) {
                     transform.y = top;
                 }
 
-                if (vpRect.left > imgRect.left + deltaX && vpRect.right < imgRect.right + deltaX) {
+                if ((vpRect.left < imgRect.left + deltaX && vpRect.right > imgRect.right + deltaX)
+                    || (vpRect.left > imgRect.left + deltaX && vpRect.right < imgRect.right + deltaX)) {
                     transform.x = left;
                 }
             }
@@ -1074,7 +1076,7 @@
             vpData = self.elements.viewport.getBoundingClientRect(),
             minW,
             minH;
-        if (self.options.enforceBoundary) {
+        if (self.options.enforceBoundary && minZoom === 0) {
             minW = vpData.width / imgData.width;
             minH = vpData.height / imgData.height;
             minZoom = Math.max(minW, minH);
@@ -1378,8 +1380,8 @@
         }
 
         var max = self.options.enforceBoundary ? 0 : Number.NEGATIVE_INFINITY;
-        x1 = Math.max(max, x1 / scale);
-        y1 = Math.max(max, y1 / scale);
+        x1 = x1 / scale;
+        y1 = y1 / scale;
         x2 = Math.max(max, x2 / scale);
         y2 = Math.max(max, y2 / scale);
 
